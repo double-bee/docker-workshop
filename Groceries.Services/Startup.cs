@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -15,17 +16,28 @@ namespace Groceries.Services
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IConfigurationRoot config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IGroceryProvider, GroceryProvider>(gp => CreateGroceryProvider(config));
+        }
+
+        private GroceryProvider CreateGroceryProvider(IConfiguration configuration)
+        {
+            GroceryProviderOptions options = new GroceryProviderOptions();
+            configuration.Bind("GroceryOptions", options);
+            return new GroceryProvider(options);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

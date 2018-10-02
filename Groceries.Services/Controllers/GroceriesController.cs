@@ -8,8 +8,13 @@ namespace Groceries.Services.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class GroceriesController : ControllerBase
     {
+        public GroceriesController(IGroceryProvider groceryProvider)
+        {
+            
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
