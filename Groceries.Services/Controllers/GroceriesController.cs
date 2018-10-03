@@ -10,43 +10,33 @@ namespace Groceries.Services.Controllers
     [ApiController]
     public class GroceriesController : ControllerBase
     {
-        private readonly IGroceryProvider _groceryProvider;
+        private readonly IGroceryRepository _groceryRepository;
 
-        public GroceriesController(IGroceryProvider groceryProvider)
+        public GroceriesController(IGroceryRepository groceryRepository)
         {
-            _groceryProvider = groceryProvider;
+            _groceryRepository = groceryRepository;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<Grocery>> Get()
         {
-            return Ok(_groceryProvider.GetAll());
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
+            return Ok(_groceryRepository.GetAll());
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Grocery value)
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            _groceryRepository.Add(value);
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{name}")]
+        public void Delete(string name)
         {
+            Grocery grocery = _groceryRepository.GetAll().FirstOrDefault(g => g.Name == name);
+            _groceryRepository.Remove(grocery);
         }
     }
 }

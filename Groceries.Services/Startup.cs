@@ -29,15 +29,10 @@ namespace Groceries.Services
             .AddEnvironmentVariables()
             .Build();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddTransient<IGroceryProvider, GroceryProvider>(gp => CreateGroceryProvider(config));
-        }
+            services.Configure<GroceryRepositoryOptions>(config);
 
-        private GroceryProvider CreateGroceryProvider(IConfiguration configuration)
-        {
-            GroceryProviderOptions options = new GroceryProviderOptions();
-            configuration.Bind("GroceryOptions", options);
-            return new GroceryProvider(options);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IGroceryRepository, GroceryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
