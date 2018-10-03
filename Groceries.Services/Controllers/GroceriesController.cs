@@ -10,16 +10,18 @@ namespace Groceries.Services.Controllers
     [ApiController]
     public class GroceriesController : ControllerBase
     {
+        private readonly IGroceryProvider _groceryProvider;
+
         public GroceriesController(IGroceryProvider groceryProvider)
         {
-            
+            _groceryProvider = groceryProvider;
         }
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Grocery>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_groceryProvider.GetAll());
         }
 
         // GET api/values/5
