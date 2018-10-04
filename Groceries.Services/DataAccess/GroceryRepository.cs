@@ -14,7 +14,7 @@ namespace Groceries.Services
         {
             _options = options.Value;
 
-            CreateDummyData();
+            CreateDummyDataIfNotFound();
         }
 
         public IEnumerable<Grocery> GetAll()
@@ -51,12 +51,12 @@ namespace Groceries.Services
             }
         }
 
-        private void CreateDummyData()
+        private void CreateDummyDataIfNotFound()
         {
             string directory = Path.GetDirectoryName(_options.DataPath);
             if (!String.IsNullOrEmpty(directory))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(_options.DataPath));
+                Directory.CreateDirectory(directory);
             }
 
             if (!File.Exists(_options.DataPath))
