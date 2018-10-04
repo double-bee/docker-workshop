@@ -5,13 +5,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Groceries.Web.Models;
+using System.Net.Http;
 
 namespace Groceries.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IGroceryService _groceryService;
+
+        public HomeController(IGroceryService groceryService)
         {
+            _groceryService = groceryService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            IEnumerable<Grocery> groceries = await _groceryService.GetAll();
+
             return View();
         }
 

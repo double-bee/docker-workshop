@@ -15,3 +15,4 @@
 - cd naar de map
 - dotnet new mvc
 - code .
+- dotnet add package Microsoft.AspNet.WebApi.Client
