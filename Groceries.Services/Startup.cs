@@ -16,20 +16,17 @@ namespace Groceries.Services
 {
     public class Startup
     {
-        public Startup()
+        private readonly IConfiguration _config;
+
+        public Startup(IConfiguration config)
         {
+            _config = config;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationRoot config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddEnvironmentVariables()
-            .Build();
-
-            services.Configure<GroceryRepositoryOptions>(config);
+            services.Configure<GroceryRepositoryOptions>(_config);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddTransient<IGroceryRepository, GroceryRepository>();
