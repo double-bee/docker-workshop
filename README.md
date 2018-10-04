@@ -3,6 +3,7 @@
 - file -> preferences -> settings -> proxy -> http://proxy04.wgwa.local:8080
 - installeer [GIT voor Windows](https://git-scm.com/download/win)
 - installeer [node.js](https://nodejs.org/en/)
+- npm install -g @angular/cli
 - voer uit "npm config set http-proxy http://proxy04.wgwa.local:8080"
 - voer uit "npm config set https-proxy http://proxy04.wgwa.local:8080"
 - clone https://github.com/double-bee/docker-workshop
