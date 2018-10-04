@@ -2,10 +2,6 @@
 - installeer [Visual Studio Code](https://code.visualstudio.com/download)
 - file -> preferences -> settings -> proxy -> http://proxy04.wgwa.local:8080
 - installeer [GIT voor Windows](https://git-scm.com/download/win)
-- installeer [node.js](https://nodejs.org/en/)
-- npm install -g @angular/cli
-- voer uit "npm config set http-proxy http://proxy04.wgwa.local:8080"
-- voer uit "npm config set https-proxy http://proxy04.wgwa.local:8080"
 - clone https://github.com/double-bee/docker-workshop
 - installeer visual studio code
 - installeer omnisharp plugin voor visual studio code
@@ -17,5 +13,5 @@
 - ga in een browser naar http://localhost:5000/api/Values om het project te testen
 - maak een map aan met de naam Groceries.Web
 - cd naar de map
-- dotnet new angular
+- dotnet new mvc
 - code .
