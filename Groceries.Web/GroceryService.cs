@@ -12,14 +12,10 @@ namespace Groceries.Web
     public class GroceryService : IGroceryService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _remoteServiceBaseUrl = "http://hallo.com/api/Groceries/";
 
         public GroceryService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-
-            _httpClient.BaseAddress = new Uri(_remoteServiceBaseUrl);
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<IEnumerable<Grocery>> GetAll()

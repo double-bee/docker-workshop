@@ -31,8 +31,8 @@ namespace Groceries.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<GroceryServiceOptions>(Configuration);
-            services.AddHttpClient<IGroceryService, GroceryService>();
+            services.AddHttpClient<IGroceryService, GroceryService>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(Configuration.GetValue<string>("GroceryServiceUri")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
