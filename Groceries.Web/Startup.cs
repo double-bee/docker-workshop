@@ -32,7 +32,10 @@ namespace Groceries.Web
             });
 
             services.AddHttpClient<IGroceryService, GroceryService>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(Configuration.GetValue<string>("GroceryServiceUri")));
+            .ConfigureHttpClient(c => {
+                                        c.BaseAddress = new Uri(Configuration.GetValue<string>("GroceryServiceUri"));
+                                    c.DefaultRequestHeaders.Add("Accept", "application/json");}
+            );
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

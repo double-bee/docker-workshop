@@ -19,10 +19,7 @@ namespace Groceries.Services.Controllers
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Grocery>> Get()
-        {
-            return Ok(_groceryRepository.GetAll());
-        }
+        public ActionResult<IEnumerable<Grocery>> Get() => Ok(_groceryRepository.GetAll());
 
         // POST api/values
         [HttpPost]
