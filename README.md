@@ -1,6 +1,9 @@
 # docker-workshop
+https://docs.microsoft.com/en-us/azure/virtual-machines/windows/using-visual-studio-vm
+
 - installeer [Visual Studio Code](https://code.visualstudio.com/download)
 - file -> preferences -> settings -> proxy -> http://proxy04.wgwa.local:8080
+- docker -> settings -> proxy -> http://proxy04.wgwa.local:8080
 - installeer [GIT voor Windows](https://git-scm.com/download/win)
 - clone https://github.com/double-bee/docker-workshop
 - installeer visual studio code
@@ -16,3 +19,6 @@
 - dotnet new mvc
 - code .
 - dotnet add package Microsoft.AspNet.WebApi.Client
+- cd naar Groceries.Services
+- docker build --build-arg HTTP_PROXY=http://proxy04.wgwa.local:8080 -t groceries.services .
+- docker run --rm -p 80:80 -v c:\temp\:c:\temp groceries.services

@@ -44,7 +44,6 @@ namespace Groceries.Services
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
