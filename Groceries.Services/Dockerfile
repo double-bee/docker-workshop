@@ -13,4 +13,8 @@ RUN dotnet publish -c Release -o out
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /app
 COPY --from=build /app/out .
+
+# Expose port to other containers
+EXPOSE 80
+
 ENTRYPOINT ["dotnet", "/app/Groceries.Services.dll"]
