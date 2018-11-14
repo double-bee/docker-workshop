@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Services", "Groceries.Services\Groceries.Services.csproj", "{1512B303-A63A-4359-B867-0558FD88F61A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Service", "Groceries.Services\Groceries.Service.csproj", "{1512B303-A63A-4359-B867-0558FD88F61A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Web", "Groceries.Web\Groceries.Web.csproj", "{AFE52B15-9162-4297-81CA-89357D1CDE1C}"
 EndProject

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.Linq;
 using System;
 
-namespace Groceries.Services
+namespace Groceries.Service
 {
     public class GroceryRepository : IGroceryRepository
     {

@@ -19,6 +19,6 @@ https://docs.microsoft.com/en-us/azure/virtual-machines/windows/using-visual-stu
 - dotnet new mvc
 - code .
 - dotnet add package Microsoft.AspNet.WebApi.Client
-- cd naar Groceries.Services
-- docker build --build-arg HTTP_PROXY=http://proxy04.wgwa.local:8080 -t groceries.services .
-- docker run --rm -p 80:80 -v c:\temp\:c:\temp groceries.services
+- cd naar Groceries.Service
+- docker build --build-arg HTTP_PROXY=http://proxy04.wgwa.local:8080 -t groceries.service .
+- docker run --rm -p 80:80 -v c:\temp\:c:\temp groceries.service

@@ -1,5 +1,8 @@
-public class GroceryRepositoryOptions
+namespace Groceries.Service
 {
-    public string DataPath { get; set; }
-    
+    public class GroceryRepositoryOptions
+    {
+        public string DataPath { get; set; }
+
+    }
 }

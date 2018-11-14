@@ -17,4 +17,4 @@ COPY --from=build /app/out .
 # Expose port to other containers
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "/app/Groceries.Services.dll"]
+ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Groceries.Services
+namespace Groceries.Service
 {
     public interface IGroceryRepository
     {
