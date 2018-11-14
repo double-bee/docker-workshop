@@ -22,7 +22,7 @@ namespace Groceries.Web.Controllers
         {
             IEnumerable<Grocery> groceries = await _groceryService.GetAll();
 
-            return View();
+            return View(groceries);
         }
 
         public IActionResult About()
