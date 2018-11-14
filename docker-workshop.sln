@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Service", "Groceries.Services\Groceries.Service.csproj", "{1512B303-A63A-4359-B867-0558FD88F61A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Web", "Groceries.Web\Groceries.Web.csproj", "{AFE52B15-9162-4297-81CA-89357D1CDE1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F22D9B1D-503E-456F-9DB4-20D0BA246799}"
@@ -15,20 +13,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Groceries.Service", "Groceries.Service\Groceries.Service.csproj", "{47F10FE9-1605-4906-9F0F-68210E2B75FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1512B303-A63A-4359-B867-0558FD88F61A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1512B303-A63A-4359-B867-0558FD88F61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1512B303-A63A-4359-B867-0558FD88F61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1512B303-A63A-4359-B867-0558FD88F61A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFE52B15-9162-4297-81CA-89357D1CDE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFE52B15-9162-4297-81CA-89357D1CDE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFE52B15-9162-4297-81CA-89357D1CDE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFE52B15-9162-4297-81CA-89357D1CDE1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F10FE9-1605-4906-9F0F-68210E2B75FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F10FE9-1605-4906-9F0F-68210E2B75FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F10FE9-1605-4906-9F0F-68210E2B75FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F10FE9-1605-4906-9F0F-68210E2B75FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
