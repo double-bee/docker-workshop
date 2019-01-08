@@ -20,7 +20,6 @@ namespace Groceries.Web
         {
             HttpResponseMessage response = await _httpClient.GetAsync("");
             response.EnsureSuccessStatusCode();
-            object bla = response.Content.ReadAsStringAsync().Result;
             IEnumerable<Grocery> result = await response.Content.ReadAsAsync<List<Grocery>>();
             return result;
         }
