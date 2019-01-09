@@ -57,10 +57,27 @@ docker build -t groceries.web .
 Je hebt nu je eerste Docker image gemaakt, gefeliciteerd je leven is verrijkt!
 Deze image staat niet in de project-directory, maar ergens centraal op het systeem.
 
-13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoudt de grootte van groceries.web):
+13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoud de grootte van groceries.web):
 ```
 docker images
 ```
+
+Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt.
+
+14. Start nu een container van de net gemaakte image:
+'''
+docker run -d -p 80:80 groceries.web
+'''
+
+15. Open een browser en ga naar het adres 'http://localhost/api/Groceries'. Je ziet dat de webservice draait en resultaten teruggeeft.
+
+16. Typ in de command prompt het volgende commando in: 'docker ps'
+
+Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit zijn containers die op dit moment draaien en containers die niet draaien.
+
+17. Stop de container met het volgende commando: 'docker stop groceries.web'. Als je nu de browser ververst zul je zien dat de service niet meer draait.
+
+18. Controleer de status van de container met het commando 'docker ps -a'. -a zorgt ervoor dat je ook gestopte containers te zien krijgt.
 
 14. docker run webservice
 
