@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Extensions.Options;
 using System.Linq;
 using System;
 
@@ -8,18 +7,16 @@ namespace Groceries.Service
 {
     public class GroceryRepository : IGroceryRepository
     {
-        private GroceryRepositoryOptions _options;
+        private const string DataPath = "/data/groceries.json";
 
-        public GroceryRepository(IOptions<GroceryRepositoryOptions> options)
+        public GroceryRepository()
         {
-            _options = options.Value;
-
             CreateDummyDataIfNotFound();
         }
 
         public IEnumerable<Grocery> GetAll()
         {
-            using (StreamReader reader = File.OpenText(_options.DataPath))
+            using (StreamReader reader = File.OpenText(DataPath))
             {
                 Newtonsoft.Json.JsonSerializer jsonSerializer = new Newtonsoft.Json.JsonSerializer();
                 IEnumerable<Grocery> result = (IEnumerable<Grocery>)jsonSerializer.Deserialize(reader, typeof(IEnumerable<Grocery>));
@@ -44,7 +41,7 @@ namespace Groceries.Service
 
         private void Save(IEnumerable<Grocery> groceries)
         {
-            using (TextWriter textWriter = new StreamWriter(_options.DataPath, false))
+            using (TextWriter textWriter = new StreamWriter(DataPath, false))
             {
                 Newtonsoft.Json.JsonSerializer jsonSerializer = new Newtonsoft.Json.JsonSerializer();
                 jsonSerializer.Serialize(textWriter, groceries);
@@ -53,13 +50,13 @@ namespace Groceries.Service
 
         private void CreateDummyDataIfNotFound()
         {
-            string directory = Path.GetDirectoryName(_options.DataPath);
+            string directory = Path.GetDirectoryName(DataPath);
             if (!String.IsNullOrEmpty(directory))
             {
                 Directory.CreateDirectory(directory);
             }
 
-            if (!File.Exists(_options.DataPath))
+            if (!File.Exists(DataPath))
             {
                 var groceries = new List<Grocery>
                 {
