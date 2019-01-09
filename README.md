@@ -29,7 +29,8 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
 Het gebouwde project staat nu in de map `Publish` (`C:\code\docker-workshop\Groceries.Service\Publish`)
 
 We gaan nu een Docker image maken waarin alle benodigde bestanden van de webservice worden gezet. Dit doen we door een dockerfile te maken. Dit is het script dat beschrijft wat er in de image komt te staan. 
-9. Dockerfile webservice maken:
+
+10. Dockerfile webservice maken:
    - Klik met de rechter muisknop in de Solution Explorere op het project `Groceries.Service`. 
    - Kies voor `Add` en dan `New Item...`. 
    - Type rechtsboven in het zoekvenster `Text` en type dan onderaan als `Name` de tekst `dockerfile`
@@ -48,19 +49,20 @@ Met het commando `WORKDIR /app` geven we de huidige directory in de Docker image
 Daarna kopieren we de inhoud van de `publish` directory met daarin de inhoud van de webservice naar de Docker image.
 Als laatste geven we aan welk programma gestart moet worden na het starten van de Docker container (`dotnet` met als argument `Groceries.Service.dll`).
 
-10. Ga in de Visual Studio Command Prompt (die je nog open hebt of een nieuwe) naar `C:\code\docker-workshop\Groceries.Service`.
-11. Voer het volgende commando uit om een Docker image te maken (let op, geen hoofdletters!):
+11. Ga in de Visual Studio Command Prompt (die je nog open hebt of een nieuwe) naar `C:\code\docker-workshop\Groceries.Service`.
+12. Voer het volgende commando uit om een Docker image te maken (let op, geen hoofdletters!):
 ```
 docker build -t groceries.web .
 ```
 Je hebt nu je eerste Docker image gemaakt, gefeliciteerd je leven is verrijkt!
 Deze image staat niet in de project-directory, maar ergens centraal op het systeem.
-12. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoudt de grootte van groceries.web):
+
+13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoudt de grootte van groceries.web):
 ```
 docker images
 ```
 
-13. docker run webservice
+14. docker run webservice
 
 - docker file is groot, daarna multistage build om kleiner te maken
 - nu zelfde maar dan met volume mapping
