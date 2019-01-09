@@ -12,7 +12,23 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
     git clone https://github.com/double-bee/docker-workshop --branch step1 --single-branch
     ```
 
+
 - Open de solution docker-workshop.sln
+
+- webservice los starten en testen. Daarna website starten en testen lokaal
+- dockerfile webservice maken en testen
+
+- docker file is groot, daarna multistage build om kleiner te maken
+
+- nu zelfde maar dan met volume mapping
+
+- dockerfile website maken en met elkaar laten praten
+
+- docker compose
+
+
+
+
 
 Deze solution bestaat uit twee projecten, een webservice waar boodschappen toegevoegd, verwijderd en opgevraagd kunnen worden en een website die een user interface biedt voor deze acties.
 
