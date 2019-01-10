@@ -54,7 +54,7 @@ Als laatste geven we aan welk programma gestart moet worden na het starten van d
 ```
 docker build -t groceries.web .
 ```
-Je hebt nu je eerste Docker image gemaakt, gefeliciteerd je leven is verrijkt!
+Je hebt nu je eerste Docker image gemaakt. Gefeliciteerd, je leven is verrijkt!
 Deze image staat niet in de project-directory, maar ergens centraal op het systeem.
 
 13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoud de grootte van groceries.web):
@@ -71,13 +71,19 @@ docker run -d -p 80:80 groceries.web
 
 15. Open een browser en ga naar het adres 'http://localhost/api/Groceries'. Je ziet dat de webservice draait en resultaten teruggeeft.
 
-16. Typ in de command prompt het volgende commando in: 'docker ps'
+16. Typ in de command prompt het volgende commando in: 'docker ps -a'
 
-Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit zijn containers die op dit moment draaien en containers die niet draaien.
+Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen containers zijn die draaien en die gestopt zijn.
 
 17. Stop de container met het volgende commando: 'docker stop groceries.web'. Als je nu de browser ververst zul je zien dat de service niet meer draait.
 
-18. Controleer de status van de container met het commando 'docker ps -a'. -a zorgt ervoor dat je ook gestopte containers te zien krijgt.
+18. Controleer de status van de container met het commando 'docker ps -a'.
+
+We hebben net buiten docker de software gebouwd en die software, met zijn afhankelijkheden (.NET Core) in een image gezet. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
+We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
+
+19. Wijzig de dockerfile als volgt:
+
 
 14. docker run webservice
 
