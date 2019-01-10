@@ -97,10 +97,28 @@ De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen d
 
 Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en natuurlijk de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
 
+21. Wijzig de dockerfile als volgt:
+'''
+FROM microsoft/dotnet:2.1-sdk as build
+WORKDIR /src
+COPY . ./
+RUN dotnet publish -c Release -o ../app
 
-14. docker run webservice
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
+'''
 
-- docker file is groot, daarna multistage build om kleiner te maken
+De eerste FROM haalt de .NET Core SDK image binnen en geeft ook een alias 'build' aan de image die we maken. Daar wordt de sourcecode in gekopieerd.
+Het RUN commando zorgt ervoor dat er een container wordt gestart van deze image en dat het project wordt gebouwd. Het resultaat komt in de map /app te staan.
+
+Vervolgens halen we een .NET Core runtime image binnen en kopieeren we uit de 'build' image de inhoud van de map /app naar de nieuwe image.
+De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altijd 1 image op, alle andere tijdelijke images en containers worden automatisch verwijderd.
+
+22. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image.
+
+
 - nu zelfde maar dan met volume mapping
 - dockerfile website maken en met elkaar laten praten
 - docker compose
@@ -109,39 +127,6 @@ Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, d
 
 
 
-Deze solution bestaat uit twee projecten, een webservice waar boodschappen toegevoegd, verwijderd en opgevraagd kunnen worden en een website die een user interface biedt voor deze acties.
-
-- Ga terug naar de command prompt
-- ga naar de directory c:\code\docker-workshop\Groceries.Service
-- Voer het volgende commando uit:
-    ```
-    dotnet publish -o out
-    ```
-Nu is de webservice gebouwd en gepublished in het mapje out. Het resultaat hiervan gaan we in een Docker image stoppen. Hiervoor moeten we een Dockerfile maken. Dat is het recept van de Docker image.
-- Maak een bestand aan met de naam DockerFile. Zet het volgende in dat bestand:
-    ```
-    FROM microsoft/dotnet:2.1-aspnetcore-runtime
-    WORKDIR /app
-    COPY out .
-    ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
-    ```
-
-
-- Voer het volgende commando uit
-    ```
-    docker build -t groceries.service .
-    ```
-We hebben nu een image gemaakt met de naam groceries.service. De inhoud van die image is wat in de map out staat. We kunnen nu docker vragen welke images er op het systeem staan.
-- Voer het volgende commando uit:
-    ```
-    docker image
-    ```
- 
-multistage
-Service docker build en run
-
-Network opzetten
-Beide run met netwerkopties 
 testen
 
 docker compose
