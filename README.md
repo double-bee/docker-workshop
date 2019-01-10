@@ -56,7 +56,7 @@ docker build -t groceries.web .
 ```
 Je hebt nu je eerste Docker image gemaakt. Gefeliciteerd, je leven is verrijkt!
 Deze image staat niet in de project-directory, maar ergens centraal op het systeem.
-
+ 
 13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoud de grootte van groceries.web):
 ```
 docker images
@@ -83,6 +83,19 @@ We hebben net buiten docker de software gebouwd en die software, met zijn afhank
 We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
 
 19. Wijzig de dockerfile als volgt:
+'''
+FROM microsoft/dotnet:2.2-sdk
+WORKDIR /src
+COPY . ./
+RUN dotnet publish -c Release -o ../app
+ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
+'''
+
+De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map /app.
+
+20. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image.
+
+Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en natuurlijk de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
 
 
 14. docker run webservice
