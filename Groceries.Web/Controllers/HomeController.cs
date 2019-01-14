@@ -20,9 +20,8 @@ namespace Groceries.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Grocery> groceries = await _groceryService.GetAll();
-
-            return View(groceries);
+            
+            return Content("De website werkt.");
         }
 
         public IActionResult About()
