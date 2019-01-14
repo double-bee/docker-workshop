@@ -19,14 +19,14 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
    - Sluit het dialoog door op `Ok` te klikken. 
 7. Start beide projecten door in Visual Studio op `F5` te drukken.
    Als het goed is krijg je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website die zijn producten heeft opgehaald bij de webservice.
-8. Sluit de browser.
+8. Sluit de browser tabbladen.
 9. Publish de webservice door:
    - Klik met de rechter muisknop in de Solution Explorere op het project `Groceries.Service`. 
    - Kies `Publish...`
    - Kies in de linker lijst voor `Folder`
    - Type in `Choose a folder` de tekst `publish`
    - Klik op de knop `Publish`
-Het gebouwde project staat nu in de map `Publish` (`C:\code\docker-workshop\Groceries.Service\Publish`)
+Het gebouwde project staat nu in de map `Publish` (`C:\code\docker-workshop\Groceries.Service\Publish`). Kijk er maar even in. Hier staat alles dat nodig om de webservice te draaien, behalve .NET Core zelf.
 
 We gaan nu een Docker image maken waarin alle benodigde bestanden van de webservice worden gezet. Dit doen we door een dockerfile te maken. Dit is het script dat beschrijft wat er in de image komt te staan. 
 
@@ -37,7 +37,7 @@ We gaan nu een Docker image maken waarin alle benodigde bestanden van de webserv
    - Hernoem de net toegevoegde file `dockerfile.txt` naar `dockerfile`
    - Plak als inhoud voor deze dockerfile de volgende tekst:
    ```
-   FROM microsoft/dotnet:2.1-runtime
+   FROM microsoft/dotnet:2.1-aspnetcore-runtime
    WORKDIR /app
    COPY publish .
    ENTRYPOINT ["dotnet", "Groceries.Service.dll"]
@@ -52,52 +52,54 @@ Als laatste geven we aan welk programma gestart moet worden na het starten van d
 11. Ga in de Visual Studio Command Prompt (die je nog open hebt of een nieuwe) naar `C:\code\docker-workshop\Groceries.Service`.
 12. Voer het volgende commando uit om een Docker image te maken (let op, geen hoofdletters!):
 ```
-docker build -t groceries.web .
+docker build -t groceries.service .
 ```
 Je hebt nu je eerste Docker image gemaakt. Gefeliciteerd, je leven is verrijkt!
 Deze image staat niet in de project-directory, maar ergens centraal op het systeem.
  
-13. Bekijk de aanwezige images op dit systeem met het volgende commando (onthoud de grootte van groceries.web):
+13. Bekijk de aanwezige images op dit systeem met het volgende commando:
 ```
 docker images
 ```
 
-Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt.
+Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt. Onthoud de grootte van groceries.service.
 
 14. Start nu een container van de net gemaakte image:
 '''
-docker run -d -p 80:80 groceries.web
+docker run -d -p 80:80 groceries.service
 '''
 
-15. Open een browser en ga naar het adres 'http://localhost/api/Groceries'. Je ziet dat de webservice draait en resultaten teruggeeft.
+Na het uitvoeren van het 'run' commando is een container gestart. Het nummer dat op het scherm verschijnt is de id van de container.
+
+15. Open een browser en ga naar het adres 'http://localhost/api/Groceries'. Je ziet dat de webservice draait en resultaten teruggeeft. Een lijst met boodschappen.
 
 16. Typ in de command prompt het volgende commando in: 'docker ps -a'
 
-Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen containers zijn die draaien en die gestopt zijn.
+Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen containers zijn die draaien en die gestopt zijn. Zoek de container id op van de container die gemaakt is van de image groceries.service. Nu is dat er maar 1 maar in een load balancing situatie kunnen er meerdere containers draaien die dezelfde image als basis hebben. Vandaar dat je niet de naam van de image kunt gebruiken om bijvoorbeeld aan te geven welke container er moet stoppen.
 
-17. Stop de container met het volgende commando: 'docker stop groceries.web'. Als je nu de browser ververst zul je zien dat de service niet meer draait.
+17. Stop de container met het volgende commando: 'docker stop CONTAINER_ID'. Als je nu de browser ververst zul je zien dat de service niet meer draait.
 
-18. Controleer de status van de container met het commando 'docker ps -a'.
+18. Controleer de status van de container met het commando 'docker ps -a' en verwijder de container met het commando 'docker rm CONTAINER_ID'.
 
-We hebben net buiten docker de software gebouwd en die software, met zijn afhankelijkheden (.NET Core) in een image gezet. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
+We hebben net buiten docker de software gebouwd en die software in een image gezet waar al .NET Core in anwezig was. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
 We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
 
-19. Wijzig de dockerfile als volgt:
+19. Wijzig de dockerfile als volgt en bouw de image opnieuw (zie stap 12):
 '''
-FROM microsoft/dotnet:2.2-sdk
+FROM microsoft/dotnet:2.1-sdk
 WORKDIR /src
 COPY . ./
 RUN dotnet publish -c Release -o ../app
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
 '''
 
-De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map /app.
+De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map '/app'.
 
 20. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image.
 
-Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en natuurlijk de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
+Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
 
-21. Wijzig de dockerfile als volgt:
+21. Wijzig de dockerfile als volgt en bouw de image opnieuw:
 '''
 FROM microsoft/dotnet:2.1-sdk as build
 WORKDIR /src
@@ -111,25 +113,53 @@ ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
 '''
 
 De eerste FROM haalt de .NET Core SDK image binnen en geeft ook een alias 'build' aan de image die we maken. Daar wordt de sourcecode in gekopieerd.
-Het RUN commando zorgt ervoor dat er een container wordt gestart van deze image en dat het project wordt gebouwd. Het resultaat komt in de map /app te staan.
+Het RUN commando zorgt ervoor dat er een container wordt gestart van deze 'build' image en dat het project wordt gebouwd. Het resultaat komt in de map '/app' te staan.
 
-Vervolgens halen we een .NET Core runtime image binnen en kopieeren we uit de 'build' image de inhoud van de map /app naar de nieuwe image.
-De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altijd 1 image op, alle andere tijdelijke images en containers worden automatisch verwijderd.
+Vervolgens halen we een .NET Core runtime image binnen en kopieeren we uit de 'build' image de inhoud van de map '/app' naar de nieuwe image.
+De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altijd 1 image op, alle tijdelijke containers worden automatisch verwijderd. De 'build' image wordt bewaard. Docker vergelijkt een volgende keer dat de dockerfile aangeroepen wordt de file met de image die nog bewaard was. Als er niets is gewijzigd aan de commando's kan de oude image direct gebruikt worden. 
 
-22. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image.
+22. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image. Stukken beter.
 
+De webservice is zo geconfigureerd dat hij zijn data opslaat in '/data/groceries.json'. Maar waar staat die data dan? Die staat in de container. Maar dat betekent dat de data weg is als je de container verwijdert. Er zijn meerdere manieren om met persistente data om te gaan in docker. Volumes en bind mounts. Volumes zijn virtuele schijven die je koppelt aan een container. De inhoud hiervan beheert Docker zelf ergens. Je kan ook een map in een docker container laten wijzen naar een map op de host. Alles dat de container dan in die map schrijft komt dan terecht in een aangewezen map op de host. Dat laatste gaan wij nu ook doen.
 
-- nu zelfde maar dan met volume mapping
-- dockerfile website maken en met elkaar laten praten
-- docker compose
+23. Maak de map 'c:\temp\data' aan.
 
+24. Typ in de command prompt het volgende commando in:
+'''
+docker run -d -p 80:80 -v c:\temp\data:/data groceries.service
+'''
 
+We hebben hier tegen docker gezegd dat de map '/data' in de container gekoppeld moet worden aan de map 'c:\temp\data'. Alles dat de container schrijft in '/data' wordt geschreven in de map 'c:\temp\data'. Overigens zie je aan de parameter '/data' dat het gaat om een linux container en deze draaien we in Windows.
+
+25. Open het bestand 'c:\temp\data\groceries.json' en voeg een boodschap toe. Open daarna de browser en ga naar URL 'http://localhost/api/Groceries' om te controleren of de boodschap inderdaad wordt weergegeven door de service.
+
+Wat we nog niet hebben getest is de parameter '-p 80:80' in het 'docker run' commando. Deze parameter zegt dat poort 80 buiten de container wordt gekoppeld aan poort 80 in de container.
+
+26. Typ in de command prompt het volgende commando in:
+'''
+docker run -d -p 81:80 groceries.service
+'''
+
+27. Typ in de command prompt het volgende commando in: 'docker ps -a'
+
+Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poort 81. Ze hebben allebei dezelfde image als basis. Open daarna de browser en ga naar URL 'http://localhost:81/api/Groceries' om dit te controleren. Je zult ook zien dat ze allebei een ander resultaat teruggeven. De service op poort 80 heeft als het goed is een boodschap meer. Hoe komt dat?
+
+28. Ga naar Visual Studio 2017 en voeg voor de groceries.web ook een dockerfile toe.
+
+29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt.
+
+30. Verwijder alle containers door ze te stoppen met docker stop 'CONTAINER_ID' en daarna docker rm 'CONTAINER_ID'
+
+31. Ga in de command prompt naar de map "c:\docker-workshop\" en voer het volgende commando uit:
+'''
+git checkout step2
+'''
+
+We gaan nu aan de slag met docker-compose. Docker-compose is een tool waarmee je applicaties die uit meerdere docker containers bestaan kunt draaien. Onze applicatie bestaat uit een website die zijn gegevens ophaalt bij een webservice.
 
 
 
 testen
-
-docker compose
 
 
 
