@@ -85,13 +85,13 @@ We hebben net buiten docker de software gebouwd en die software in een image gez
 We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
 
 19. Wijzig de dockerfile als volgt en bouw de image opnieuw (zie stap 12):
-'''
+```
 FROM microsoft/dotnet:2.1-sdk
 WORKDIR /src
 COPY . ./
 RUN dotnet publish -c Release -o ../app
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
-'''
+```
 
 De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map '/app'.
 
@@ -100,7 +100,7 @@ De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen d
 Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
 
 21. Wijzig de dockerfile als volgt en bouw de image opnieuw:
-'''
+```
 FROM microsoft/dotnet:2.1-sdk as build
 WORKDIR /src
 COPY . ./
@@ -110,7 +110,7 @@ FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
-'''
+```
 
 De eerste FROM haalt de .NET Core SDK image binnen en geeft ook een alias 'build' aan de image die we maken. Daar wordt de sourcecode in gekopieerd.
 Het RUN commando zorgt ervoor dat er een container wordt gestart van deze 'build' image en dat het project wordt gebouwd. Het resultaat komt in de map '/app' te staan.
@@ -125,9 +125,9 @@ De webservice is zo geconfigureerd dat hij zijn data opslaat in '/data/groceries
 23. Maak de map 'c:\temp\data' aan.
 
 24. Typ in de command prompt het volgende commando in:
-'''
+```
 docker run -d -p 80:80 -v c:\temp\data:/data groceries.service
-'''
+```
 
 We hebben hier tegen docker gezegd dat de map '/data' in de container gekoppeld moet worden aan de map 'c:\temp\data'. Alles dat de container schrijft in '/data' wordt geschreven in de map 'c:\temp\data'. Overigens zie je aan de parameter '/data' dat het gaat om een linux container en deze draaien we in Windows.
 
@@ -136,9 +136,9 @@ We hebben hier tegen docker gezegd dat de map '/data' in de container gekoppeld 
 Wat we nog niet hebben getest is de parameter '-p 80:80' in het 'docker run' commando. Deze parameter zegt dat poort 80 buiten de container wordt gekoppeld aan poort 80 in de container.
 
 26. Typ in de command prompt het volgende commando in:
-'''
+```
 docker run -d -p 81:80 groceries.service
-'''
+```
 
 27. Typ in de command prompt het volgende commando in: 'docker ps -a'
 
@@ -151,9 +151,9 @@ Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poor
 30. Verwijder alle containers door ze te stoppen met docker stop 'CONTAINER_ID' en daarna docker rm 'CONTAINER_ID'
 
 31. Ga in de command prompt naar de map "c:\docker-workshop\" en voer het volgende commando uit:
-'''
+```
 git checkout step2
-'''
+```
 
 We gaan nu aan de slag met docker-compose. Docker-compose is een tool waarmee je applicaties die uit meerdere docker containers bestaan kunt draaien. Onze applicatie bestaat uit een website die zijn gegevens ophaalt bij een webservice.
 
