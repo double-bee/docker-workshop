@@ -65,9 +65,9 @@ docker images
 Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt. Onthoud de grootte van groceries.service.
 
 14. Start nu een container van de net gemaakte image:
-'''
+```
 docker run -d -p 80:80 groceries.service
-'''
+```
 
 Na het uitvoeren van het 'run' commando is een container gestart. Het nummer dat op het scherm verschijnt is de id van de container.
 
@@ -131,7 +131,7 @@ docker run -d -p 80:80 -v c:\temp\data:/data groceries.service
 
 We hebben hier tegen docker gezegd dat de map '/data' in de container gekoppeld moet worden aan de map 'c:\temp\data'. Alles dat de container schrijft in '/data' wordt geschreven in de map 'c:\temp\data'. Overigens zie je aan de parameter '/data' dat het gaat om een linux container en deze draaien we in Windows.
 
-25. Open het bestand 'c:\temp\data\groceries.json' en voeg een boodschap toe. Open daarna de browser en ga naar URL 'http://localhost/api/Groceries' om te controleren of de boodschap inderdaad wordt weergegeven door de service.
+25. Ga naar URL 'http://localhost/api/Groceries'. Open daarna het bestand 'c:\temp\data\groceries.json' en voeg een boodschap toe. Open daarna de browser en ga naar URL 'http://localhost/api/Groceries' om te controleren of de boodschap inderdaad wordt weergegeven door de service.
 
 Wat we nog niet hebben getest is de parameter '-p 80:80' in het 'docker run' commando. Deze parameter zegt dat poort 80 buiten de container wordt gekoppeld aan poort 80 in de container.
 
@@ -144,11 +144,11 @@ docker run -d -p 81:80 groceries.service
 
 Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poort 81. Ze hebben allebei dezelfde image als basis. Open daarna de browser en ga naar URL 'http://localhost:81/api/Groceries' om dit te controleren. Je zult ook zien dat ze allebei een ander resultaat teruggeven. De service op poort 80 heeft als het goed is een boodschap meer. Hoe komt dat?
 
-28. Ga naar Visual Studio 2017 en voeg voor de groceries.web ook een dockerfile toe.
+28. Ga naar Visual Studio 2017, voeg voor de groceries.web ook een dockerfile toe en maak deze compleet voor het groceries.web project.
 
 29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt.
 
-30. Verwijder alle containers door ze te stoppen met docker stop 'CONTAINER_ID' en daarna docker rm 'CONTAINER_ID'
+30. Verwijder alle containers door ze te stoppen en te verwijderen.
 
 31. Ga in de command prompt naar de map "c:\docker-workshop\" en voer het volgende commando uit:
 ```
