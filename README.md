@@ -9,7 +9,7 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
 3. Zet de huidige directory naar die map
 4. Voer het volgende commando uit om de source code van het project op te halen : 
     ```
-    git clone https://github.com/double-bee/docker-workshop --branch step1 --single-branch
+    git clone https://github.com/double-bee/docker-workshop --branch step1
     ```
 5. Open de solution docker-workshop.sln met Visual Studio 2017.
 6. Configureer het start-up project
@@ -81,7 +81,7 @@ Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen
 
 18. Controleer de status van de container met het commando 'docker ps -a' en verwijder de container met het commando 'docker rm CONTAINER_ID'.
 
-We hebben net buiten docker de software gebouwd en die software in een image gezet waar al .NET Core in anwezig was. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
+We hebben net buiten docker de software gebouwd en die software in een image gezet waar al .NET Core in aanwezig was. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
 We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
 
 19. Wijzig de dockerfile als volgt en bouw de image opnieuw (zie stap 12):
@@ -150,39 +150,42 @@ Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poor
 
 30. Verwijder alle containers door ze te stoppen en te verwijderen.
 
-31. Ga in de command prompt naar de map "c:\code\docker-workshop\" en voer het volgende commando uit:
+31. Sluit de solution in Visual Studio.
+
+32. Ga in de Command prompt naar de map 'c:\code\'. Voer hier het volgende commando uit:
 ```
-git checkout step2
+git clone https://github.com/double-bee/docker-workshop --branch step2 docker-workshop2
 ```
 
-We gaan nu aan de slag met docker-compose. Docker-compose is een tool waarmee je applicaties die uit meerdere docker containers bestaan kunt draaien. Onze applicatie bestaat uit een website die zijn gegevens ophaalt bij een webservice.
+32. Ga in de command prompt naar deze nieuwe map en open de solution met visual studio.
 
+We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers tegelijk starten die eventueel ook samen in een virtueel netwerk met elkaar communiceren.
 
+31. In de solution explorer van Visual Studio, maak onder de solution items een bestand aan met de naam 'docker-compose.yml'.
 
-testen
+32. Voeg de volgende code toe aan het bestand:
+```
+version: '3.4'
 
+services:
+  groceries.service:
+    image: ${DOCKER_REGISTRY-}groceries.service
+    build:
+      context: Groceries.Service
+      dockerfile: Dockerfile
 
+  groceries.web:
+    image: ${DOCKER_REGISTRY-}groceries.web
+    build:
+      context: Groceries.Web
+      dockerfile: Dockerfile
+    ports:
+      - "85:80"
+    environment:
+      - GroceryServiceUri=http://groceries.service/api/Groceries
+    depends_on:
+      - groceries.service
 
-https://docs.microsoft.com/en-us/azure/virtual-machines/windows/using-visual-studio-vm
+```
 
-- installeer [Visual Studio Code](https://code.visualstudio.com/download)
-- file -> preferences -> settings -> proxy -> http://proxy04.wgwa.local:8080
-- docker -> settings -> proxy -> http://proxy04.wgwa.local:8080
-- installeer [GIT voor Windows](https://git-scm.com/download/win)
-- clone https://github.com/double-bee/docker-workshop
-- installeer visual studio code
-- installeer omnisharp plugin voor visual studio code
-- maak een map aan met de naam Groceries.Service
-- cd naar de map
-- dotnet new webapi
-- code .
-- dotnet run
-- ga in een browser naar http://localhost:5000/api/Values om het project te testen
-- maak een map aan met de naam Groceries.Web
-- cd naar de map
-- dotnet new mvc
-- code .
-- dotnet add package Microsoft.AspNet.WebApi.Client
-- cd naar Groceries.Service
-- docker build --build-arg HTTP_PROXY=http://proxy04.wgwa.local:8080 -t groceries.service .
-- docker run --rm -p 80:80 -v c:\temp\:c:\temp groceries.service
+Deze file definieert twee services, en geeft aan hoe ze gebouwd moeten worden, namelijk met de dockerfile in de beide mappen. Als extra toevoeging
