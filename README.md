@@ -77,7 +77,7 @@ Na het uitvoeren van het 'run' commando is een container gestart. Het nummer dat
 
 Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen containers zijn die draaien en die gestopt zijn. Zoek de container id op van de container die gemaakt is van de image groceries.service. Nu is dat er maar 1 maar in een load balancing situatie kunnen er meerdere containers draaien die dezelfde image als basis hebben. Vandaar dat je niet de naam van de image kunt gebruiken om bijvoorbeeld aan te geven welke container er moet stoppen.
 
-17. Stop de container met het volgende commando: 'docker stop CONTAINER_ID'. Als je nu de browser ververst zul je zien dat de service niet meer draait.
+17. Stop de container met het volgende commando: 'docker stop CONTAINER_ID'. Je hoeft niet de hele container id in te vullen, alleen de eerste drie letters is voldoende als deze uniek zijn onder de containers. Als je nu de browser ververst zul je zien dat de service niet meer draait. 
 
 18. Controleer de status van de container met het commando 'docker ps -a' en verwijder de container met het commando 'docker rm CONTAINER_ID'.
 
@@ -146,11 +146,11 @@ Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poor
 
 28. Ga naar Visual Studio 2017, voeg voor de groceries.web ook een dockerfile toe en maak deze compleet voor het groceries.web project.
 
-29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt.
+29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt op 'http://localhost:GEKOZEN_POORT'.
 
 30. Verwijder alle containers door ze te stoppen en te verwijderen.
 
-31. Ga in de command prompt naar de map "c:\docker-workshop\" en voer het volgende commando uit:
+31. Ga in de command prompt naar de map "c:\code\docker-workshop\" en voer het volgende commando uit:
 ```
 git checkout step2
 ```
