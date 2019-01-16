@@ -69,17 +69,17 @@ Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebru
 docker run -d -p 80:80 groceries.service
 ```
 
-Na het uitvoeren van het 'run' commando is een container gestart. Het nummer dat op het scherm verschijnt is de id van de container.
+Na het uitvoeren van het `run` commando is een container gestart. Het nummer dat op het scherm verschijnt is de id van de container.
 
-15. Open een browser en ga naar het adres 'http://localhost/api/Groceries'. Je ziet dat de webservice draait en resultaten teruggeeft. Een lijst met boodschappen.
+15. Open een browser en ga naar het adres `http://localhost/api/Groceries`. Je ziet dat de webservice draait en resultaten teruggeeft. Een lijst met boodschappen.
 
-16. Typ in de command prompt het volgende commando in: 'docker ps -a'
+16. Typ in de command prompt het volgende commando in: `docker ps -a`
 
 Je ziet nu een lijst met containers die aanwezig zijn op het systeem. Dit kunnen containers zijn die draaien en die gestopt zijn. Zoek de container id op van de container die gemaakt is van de image groceries.service. Nu is dat er maar 1 maar in een load balancing situatie kunnen er meerdere containers draaien die dezelfde image als basis hebben. Vandaar dat je niet de naam van de image kunt gebruiken om bijvoorbeeld aan te geven welke container er moet stoppen.
 
-17. Stop de container met het volgende commando: 'docker stop CONTAINER_ID'. Je hoeft niet de hele container id in te vullen, alleen de eerste drie letters is voldoende als deze uniek zijn onder de containers. Als je nu de browser ververst zul je zien dat de service niet meer draait. 
+17. Stop de container met het volgende commando: `docker stop CONTAINER_ID`. Je hoeft niet de hele container id in te vullen, alleen de eerste drie letters is voldoende als deze uniek zijn onder de containers. Als je nu de browser ververst zul je zien dat de service niet meer draait. 
 
-18. Controleer de status van de container met het commando 'docker ps -a' en verwijder de container met het commando 'docker rm CONTAINER_ID'.
+18. Controleer de status van de container met het commando `docker ps -a` en verwijder de container met het commando `docker rm CONTAINER_ID`.
 
 We hebben net buiten docker de software gebouwd en die software in een image gezet waar al .NET Core in aanwezig was. Met deze image kun je vervolgens op elk willekeurig systeem een container starten en er zeker van zijn dat het werkt.
 We kunnen echter nog een verbetering maken. We kunnen het bouwen van de software ook doen tijdens het maken van een image. De compiler die je hiervoor nodig hebt kun je ook gewoon als image downloaden. Het voordeel hiervan is dat zelfs de build omgeving altijd gelijk zal zijn. We gaan hiervoor de dockerfile aanpassen.
@@ -93,9 +93,9 @@ RUN dotnet publish -c Release -o ../app
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
 ```
 
-De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map '/app'.
+De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map `/app`.
 
-20. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image.
+20. Typ in de command prompt het volgende commando in: `docker images`. Kijk naar de grootte van ons gemaakte image.
 
 Deze image is aanzienlijk groter. In deze image zit nu een hele .NET Core SDK, de sourcecode van het project en de uitvoerbare binaries. Dat is natuurlijk geen gewenste situatie. Tijd om dit te verbeteren met behulp van een multi stage dockerfile.
 
@@ -112,47 +112,47 @@ COPY --from=build /app .
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
 ```
 
-De eerste FROM haalt de .NET Core SDK image binnen en geeft ook een alias 'build' aan de image die we maken. Daar wordt de sourcecode in gekopieerd.
-Het RUN commando zorgt ervoor dat er een container wordt gestart van deze 'build' image en dat het project wordt gebouwd. Het resultaat komt in de map '/app' te staan.
+De eerste FROM haalt de .NET Core SDK image binnen en geeft ook een alias `build` aan de image die we maken. Daar wordt de sourcecode in gekopieerd.
+Het RUN commando zorgt ervoor dat er een container wordt gestart van deze `build` image en dat het project wordt gebouwd. Het resultaat komt in de map `/app` te staan.
 
-Vervolgens halen we een .NET Core runtime image binnen en kopieeren we uit de 'build' image de inhoud van de map '/app' naar de nieuwe image.
-De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altijd 1 image op, alle tijdelijke containers worden automatisch verwijderd. De 'build' image wordt bewaard. Docker vergelijkt een volgende keer dat de dockerfile aangeroepen wordt de file met de image die nog bewaard was. Als er niets is gewijzigd aan de commando's kan de oude image direct gebruikt worden. 
+Vervolgens halen we een .NET Core runtime image binnen en kopieeren we uit de `build` image de inhoud van de map `/app` naar de nieuwe image.
+De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altijd 1 image op, alle tijdelijke containers worden automatisch verwijderd. De `build` image wordt bewaard. Docker vergelijkt een volgende keer dat de dockerfile aangeroepen wordt de file met de image die nog bewaard was. Als er niets is gewijzigd aan de commando`s kan de oude image direct gebruikt worden. 
 
-22. Typ in de command prompt het volgende commando in: 'docker images'. Kijk naar de grootte van ons gemaakte image. Stukken beter.
+22. Typ in de command prompt het volgende commando in: `docker images`. Kijk naar de grootte van ons gemaakte image. Stukken beter.
 
-De webservice is zo geconfigureerd dat hij zijn data opslaat in '/data/groceries.json'. Maar waar staat die data dan? Die staat in de container. Maar dat betekent dat de data weg is als je de container verwijdert. Er zijn meerdere manieren om met persistente data om te gaan in docker. Volumes en bind mounts. Volumes zijn virtuele schijven die je koppelt aan een container. De inhoud hiervan beheert Docker zelf ergens. Je kan ook een map in een docker container laten wijzen naar een map op de host. Alles dat de container dan in die map schrijft komt dan terecht in een aangewezen map op de host. Dat laatste gaan wij nu ook doen.
+De webservice is zo geconfigureerd dat hij zijn data opslaat in `/data/groceries.json`. Maar waar staat die data dan? Die staat in de container. Maar dat betekent dat de data weg is als je de container verwijdert. Er zijn meerdere manieren om met persistente data om te gaan in docker. Volumes en bind mounts. Volumes zijn virtuele schijven die je koppelt aan een container. De inhoud hiervan beheert Docker zelf ergens. Je kan ook een map in een docker container laten wijzen naar een map op de host. Alles dat de container dan in die map schrijft komt dan terecht in een aangewezen map op de host. Dat laatste gaan wij nu ook doen.
 
-23. Maak de map 'c:\temp\data' aan.
+23. Maak de map `c:\temp\data` aan.
 
 24. Typ in de command prompt het volgende commando in:
 ```
 docker run -d -p 80:80 -v c:\temp\data:/data groceries.service
 ```
 
-We hebben hier tegen docker gezegd dat de map '/data' in de container gekoppeld moet worden aan de map 'c:\temp\data'. Alles dat de container schrijft in '/data' wordt geschreven in de map 'c:\temp\data'. Overigens zie je aan de parameter '/data' dat het gaat om een linux container en deze draaien we in Windows.
+We hebben hier tegen docker gezegd dat de map `/data` in de container gekoppeld moet worden aan de map `c:\temp\data`. Alles dat de container schrijft in `/data` wordt geschreven in de map `c:\temp\data`. Overigens zie je aan de parameter `/data` dat het gaat om een linux container en deze draaien we in Windows.
 
-25. Ga naar URL 'http://localhost/api/Groceries'. Open daarna het bestand 'c:\temp\data\groceries.json' en voeg een boodschap toe. Open daarna de browser en ga naar URL 'http://localhost/api/Groceries' om te controleren of de boodschap inderdaad wordt weergegeven door de service.
+25. Ga naar URL `http://localhost/api/Groceries`. Open daarna het bestand `c:\temp\data\groceries.json` en voeg een boodschap toe. Open daarna de browser en ga naar URL `http://localhost/api/Groceries` om te controleren of de boodschap inderdaad wordt weergegeven door de service.
 
-Wat we nog niet hebben getest is de parameter '-p 80:80' in het 'docker run' commando. Deze parameter zegt dat poort 80 buiten de container wordt gekoppeld aan poort 80 in de container.
+Wat we nog niet hebben getest is de parameter `-p 80:80` in het `docker run` commando. Deze parameter zegt dat poort 80 buiten de container wordt gekoppeld aan poort 80 in de container.
 
 26. Typ in de command prompt het volgende commando in:
 ```
 docker run -d -p 81:80 groceries.service
 ```
 
-27. Typ in de command prompt het volgende commando in: 'docker ps -a'
+27. Typ in de command prompt het volgende commando in: `docker ps -a`
 
-Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poort 81. Ze hebben allebei dezelfde image als basis. Open daarna de browser en ga naar URL 'http://localhost:81/api/Groceries' om dit te controleren. Je zult ook zien dat ze allebei een ander resultaat teruggeven. De service op poort 80 heeft als het goed is een boodschap meer. Hoe komt dat?
+Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poort 81. Ze hebben allebei dezelfde image als basis. Open daarna de browser en ga naar URL `http://localhost:81/api/Groceries` om dit te controleren. Je zult ook zien dat ze allebei een ander resultaat teruggeven. De service op poort 80 heeft als het goed is een boodschap meer. Hoe komt dat?
 
 28. Ga naar Visual Studio 2017, voeg voor de groceries.web ook een dockerfile toe en maak deze compleet voor het groceries.web project.
 
-29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt op 'http://localhost:GEKOZEN_POORT'.
+29. Bouw de docker image groceries.web, start er een container van op en test of de website werkt op `http://localhost:GEKOZEN_POORT`.
 
 30. Verwijder alle containers door ze te stoppen en te verwijderen.
 
 31. Sluit de solution in Visual Studio.
 
-32. Ga in de Command prompt naar de map 'c:\code\'. Voer hier het volgende commando uit:
+32. Ga in de Command prompt naar de map `c:\code\`. Voer hier het volgende commando uit:
 ```
 git clone https://github.com/double-bee/docker-workshop --branch step2 docker-workshop2
 ```
@@ -161,11 +161,11 @@ git clone https://github.com/double-bee/docker-workshop --branch step2 docker-wo
 
 We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers tegelijk starten die eventueel ook samen in een virtueel netwerk met elkaar communiceren.
 
-34. In de solution explorer van Visual Studio, maak onder de solution items een bestand aan met de naam 'docker-compose.yml'.
+34. In de solution explorer van Visual Studio, maak onder de solution items een bestand aan met de naam `docker-compose.yml`.
 
 35. Voeg de volgende code toe aan het bestand:
 ```
-version: '3.4'
+version: `3.4`
 
 services:
   groceries.service:
@@ -186,23 +186,23 @@ services:
     depends_on:
       - groceries.service
 ```
-Deze file definieert twee services en geeft aan hoe ze gebouwd moeten worden, namelijk met de dockerfile in de beide mappen. Als extra toevoeging geven we nog een environment variabele toe aan de groceries.web website. Deze website moet namelijk weten waar hij zijn data vandaan moet halen, waar de groceries.service op te bereiken is. Hier werken we niet met vaste adressen maar kan verwezen worden naar de naam van de service, de webservice is op deze naam in het virtuele netwerk te bereiken.
+Deze file definieert twee services en geeft aan hoe ze gebouwd moeten worden, namelijk met de dockerfile in de beide mappen. Als extra toevoeging geven we nog een environment variabele mee aan de groceries.web website. Deze website moet namelijk weten waar hij zijn data vandaan moet halen, waar de groceries.service op te bereiken is. Hier werken we niet met vaste adressen maar kan verwezen worden naar de naam van de service, de webservice is op deze naam in het virtuele netwerk te bereiken.
 
-36. Voer het volgende commando uit in de map 'c:\code\docker-workshop2'
+36. Voer het volgende commando uit in de map `c:\code\docker-workshop2`
 ```
 docker-compose up
 ```
-Door het commando 'docker-compose up' te geven worden de twee images eventueel gebouwd en daarna worden er containers van gestart. Je kunt de website testen door de URL 'http://localhost:85' in de browser te tikken. De website roept de webservice aan, ontvangt een lijst met boodschappen en toont deze op het scherm.
+Door het commando `docker-compose up` te geven worden de twee images eventueel gebouwd en daarna worden er containers van gestart. Je kunt de website testen door de URL http://localhost:85 in de browser te tikken. De website roept de webservice aan, ontvangt een lijst met boodschappen en toont deze op het scherm.
 
-Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan 'docker run' mee te geven dat de webservice zijn data op de host opsloeg. Dat is nu niet meer het geval nu we docker-compose gebruiken aangezien we geen 'docker run' aanroepen. Uietaard is dit wel te configureren in de 'docker-compose.yml' file.
+Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan `docker run` mee te geven dat de webservice zijn data op de host opsloeg. Dat is nu niet meer het geval nu we docker-compose gebruiken aangezien we geen `docker run` aanroepen. Uiteraard is dit wel te configureren in de `docker-compose.yml` file.
 
-37. Pas de 'docker-compose.yml' file aan zodat de data van de groceries.service weer in 'c:\temp\data' wordt opgeslagen. De documentatie is hier te vinden: https://docs.docker.com/compose/compose-file/
+37. Pas de `docker-compose.yml` file aan zodat de data van de groceries.service weer in `c:\temp\data` wordt opgeslagen. Je mag zelf uitzoeken hoe. De documentatie is hier te vinden: https://docs.docker.com/compose/compose-file/
 
 Je hoeft niet altijd zelf alles te verzinnen. Visual Studio heeft ook Docker support.
 
 38.  Maak een nieuwe project aan Visual Studio. File -> New -> Project .NET Core. Kies een ASP.NET Core Web Application. Druk op OK. Kies in het volgende dialoog voor Web Application en vink onderaan "Enable Docker Support" aan. Druk op OK.
 
-Bekijk de gegenereerde dockerfile en beredeneer wat hij doet en waarom. Als je nu op F5 drukt zal Visual Studio 'docker build' en 'docker run' aanroepen. Je kunt zelfs breakpoints zetten en debuggen in Visual Studio terwijl de software in een Docker container! Probeer maar.
+Bekijk de gegenereerde dockerfile en beredeneer wat hij doet en waarom. Als je nu op F5 drukt zal Visual Studio `docker build` en `docker run` aanroepen. Je kunt zelfs breakpoints zetten en debuggen in Visual Studio terwijl de software in een Docker container draait! Probeer maar.
 
 Docker images waar je trots op bent kun je beschikbaar maken aan de wereld net zoals je dit met nuget packages kunt doen. Een image kan je in een publieke (of private natuurlijk) repository zetten. Een van die repositories is docker hub, te vinden op hub.docker.com.
 

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   groceries.service:
-    image: ${DOCKER_REGISTRY-}groceries.service
+    image: groceries.service
     build:
       context: Groceries.Service
       dockerfile: Dockerfile
@@ -10,7 +10,7 @@ services:
       - c:\temp\data:/data
 
   groceries.web:
-    image: ${DOCKER_REGISTRY-}groceries.web
+    image: groceries.web
     build:
       context: Groceries.Web
       dockerfile: Dockerfile
