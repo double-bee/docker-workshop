@@ -157,25 +157,25 @@ Nu draaien er twee webservices. Een luistert op poort 80 en een luistert op poor
 git clone https://github.com/double-bee/docker-workshop --branch step2 docker-workshop2
 ```
 
-32. Ga in de command prompt naar deze nieuwe map en open de solution met visual studio.
+33. Ga in de command prompt naar deze nieuwe map en open de solution met visual studio.
 
 We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers tegelijk starten die eventueel ook samen in een virtueel netwerk met elkaar communiceren.
 
-31. In de solution explorer van Visual Studio, maak onder de solution items een bestand aan met de naam 'docker-compose.yml'.
+34. In de solution explorer van Visual Studio, maak onder de solution items een bestand aan met de naam 'docker-compose.yml'.
 
-32. Voeg de volgende code toe aan het bestand:
+35. Voeg de volgende code toe aan het bestand:
 ```
 version: '3.4'
 
 services:
   groceries.service:
-    image: ${DOCKER_REGISTRY-}groceries.service
+    image: groceries.service
     build:
       context: Groceries.Service
       dockerfile: Dockerfile
 
   groceries.web:
-    image: ${DOCKER_REGISTRY-}groceries.web
+    image: groceries.web
     build:
       context: Groceries.Web
       dockerfile: Dockerfile
@@ -185,7 +185,25 @@ services:
       - GroceryServiceUri=http://groceries.service/api/Groceries
     depends_on:
       - groceries.service
-
 ```
+Deze file definieert twee services en geeft aan hoe ze gebouwd moeten worden, namelijk met de dockerfile in de beide mappen. Als extra toevoeging geven we nog een environment variabele toe aan de groceries.web website. Deze website moet namelijk weten waar hij zijn data vandaan moet halen, waar de groceries.service op te bereiken is. Hier werken we niet met vaste adressen maar kan verwezen worden naar de naam van de service, de webservice is op deze naam in het virtuele netwerk te bereiken.
 
-Deze file definieert twee services, en geeft aan hoe ze gebouwd moeten worden, namelijk met de dockerfile in de beide mappen. Als extra toevoeging
+36. Voer het volgende commando uit in de map 'c:\code\docker-workshop2'
+```
+docker-compose up
+```
+Door het commando 'docker-compose up' te geven worden de twee images eventueel gebouwd en daarna worden er containers van gestart. Je kunt de website testen door de URL 'http://localhost:85' in de browser te tikken. De website roept de webservice aan, ontvangt een lijst met boodschappen en toont deze op het scherm.
+
+Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan 'docker run' mee te geven dat de webservice zijn data op de host opsloeg. Dat is nu niet meer het geval nu we docker-compose gebruiken aangezien we geen 'docker run' aanroepen. Uietaard is dit wel te configureren in de 'docker-compose.yml' file.
+
+37. Pas de 'docker-compose.yml' file aan zodat de data van de groceries.service weer in 'c:\temp\data' wordt opgeslagen. De documentatie is hier te vinden: https://docs.docker.com/compose/compose-file/
+
+Je hoeft niet altijd zelf alles te verzinnen. Visual Studio heeft ook Docker support.
+
+38.  Maak een nieuwe project aan Visual Studio. File -> New -> Project .NET Core. Kies een ASP.NET Core Web Application. Druk op OK. Kies in het volgende dialoog voor Web Application en vink onderaan "Enable Docker Support" aan. Druk op OK.
+
+Bekijk de gegenereerde dockerfile en beredeneer wat hij doet en waarom. Als je nu op F5 drukt zal Visual Studio 'docker build' en 'docker run' aanroepen. Je kunt zelfs breakpoints zetten en debuggen in Visual Studio terwijl de software in een Docker container! Probeer maar.
+
+Docker images waar je trots op bent kun je beschikbaar maken aan de wereld net zoals je dit met nuget packages kunt doen. Een image kan je in een publieke (of private natuurlijk) repository zetten. Een van die repositories is docker hub, te vinden op hub.docker.com.
+
+39. Log in met je docker id of maak een account aan bij hub.docker.com en probeer een image te publishen en vervolgens er in je docker-compose file naar te refereren.
