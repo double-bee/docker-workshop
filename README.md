@@ -200,7 +200,7 @@ Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan `do
 
 Je hoeft niet altijd zelf alles te verzinnen. Visual Studio heeft ook Docker support.
 
-38.  Maak een nieuwe project aan Visual Studio. File -> New -> Project .NET Core. Kies een ASP.NET Core Web Application. Druk op OK. Kies in het volgende dialoog voor Web Application en vink onderaan "Enable Docker Support" aan. Druk op OK.
+38.  Maak een nieuwe project aan Visual Studio. File -> New -> Project .NET Core. Kies een ASP.NET Core Web Application. Druk op OK. Kies in het volgende dialoog voor Web Application en vink onderaan "Enable Docker Support" aan. Zorg ook dat het OS op Linux staat in het vakje eronder. Druk op OK.
 
 Bekijk de gegenereerde dockerfile en beredeneer wat hij doet en waarom. Als je nu op F5 drukt zal Visual Studio `docker build` en `docker run` aanroepen. Je kunt zelfs breakpoints zetten en debuggen in Visual Studio terwijl de software in een Docker container draait! Probeer maar.
 
