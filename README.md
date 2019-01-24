@@ -165,7 +165,7 @@ We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers te
 
 35. Voeg de volgende code toe aan het bestand:
 ```
-version: `3.4`
+version: '3.4'
 
 services:
   groceries.service:
@@ -190,7 +190,7 @@ Deze file definieert twee services en geeft aan hoe ze gebouwd moeten worden, na
 
 36. Voer het volgende commando uit in de map `c:\code\docker-workshop2`
 ```
-docker-compose up
+docker-compose up --build
 ```
 Door het commando `docker-compose up` te geven worden de twee images eventueel gebouwd en daarna worden er containers van gestart. Je kunt de website testen door de URL http://localhost:85 in de browser te tikken. De website roept de webservice aan, ontvangt een lijst met boodschappen en toont deze op het scherm.
 
