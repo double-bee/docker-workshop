@@ -2,7 +2,7 @@
 
 Het doel van deze hackathon is het spelen met Docker. We gebruiken hiervoor een testproject in .NET Core dat bestaat uit een website en een service. De website en de webservice zullen allebei in een eigen docker container draaien waarbij de website bevragingen doet bij de webservice.
 
-In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt de hoeveelheid uitleg weinig tot niet en kan er lekker gespeeld worden.
+In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt de hoeveelheid uitleg weinig tot niets en kan er lekker gespeeld worden.
 
 1. Open een Developer Command Prompt for VS 2017
 2. Maak een map aan met de naam `code` in de root van de C-schijf, dus `c:\code`
@@ -18,7 +18,7 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
    - Zet de action van beide projecten op `Start`. 
    - Sluit het dialoog door op `Ok` te klikken. 
 7. Start beide projecten door in Visual Studio op `F5` te drukken.
-   Als het goed is krijg je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website die zijn producten heeft opgehaald bij de webservice.
+   Als het goed is opent je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website die zijn producten heeft opgehaald bij de webservice.
 8. Sluit de browser tabbladen.
 9. Publish de webservice door:
    - Klik met de rechter muisknop in de Solution Explorere op het project `Groceries.Service`. 
@@ -47,9 +47,9 @@ We gaan nu een Docker image maken waarin alle benodigde bestanden van de webserv
 Elke docker image heeft een andere image als basis. Met de `FROM` regel kiezen wij een image waarin Microsoft alle benodigdheden voor een .NET Core applicatie heeft gezet. De image is zelf weer afgeleid van een Linux-gebaseerde image.
 Met het commando `WORKDIR /app` geven we de huidige directory in de Docker image aan, net als de huidige directory in een command-prompt.
 Daarna kopieren we de inhoud van de `publish` directory met daarin de inhoud van de webservice naar de Docker image.
-Als laatste geven we aan welk programma gestart moet worden na het starten van de Docker container (`dotnet` met als argument `Groceries.Service.dll`).
+Als laatste geven we aan welk programma gestart moet worden bij het starten van de Docker container (`dotnet` met als argument `Groceries.Service.dll`).
 
-11. Ga in de Visual Studio Command Prompt (die je nog open hebt of een nieuwe) naar `C:\code\docker-workshop\Groceries.Service`.
+11. Ga in de Visual Studio Command Prompt (die je nog open hebt of een nieuwe) naar de map `C:\code\docker-workshop\Groceries.Service`.
 12. Voer het volgende commando uit om een Docker image te maken (let op, geen hoofdletters!):
 ```
 docker build -t groceries.service .
@@ -93,7 +93,7 @@ RUN dotnet publish -c Release -o ../app
 ENTRYPOINT ["dotnet", "/app/Groceries.Service.dll"]
 ```
 
-De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map `/app`.
+De eerste regel haalt nu een andere image binnen. In dit image zit niet alleen de .NET Core runtime zoals in de vorige image maar ook de SDK (Software Development Kit) met de compiler. Vervolgens kopieeren we de sourcecode naar de image en roepen dotnet publish aan. Dotnet publish download benodigde packages, bouwt het project en kopieert het resultaat naar de map `/app`.
 
 20. Typ in de command prompt het volgende commando in: `docker images`. Kijk naar de grootte van ons gemaakte image.
 
@@ -120,7 +120,7 @@ De laatste FROM bepaalt welke image er over blijft, elke dockerfile levert altij
 
 22. Typ in de command prompt het volgende commando in: `docker images`. Kijk naar de grootte van ons gemaakte image. Stukken beter.
 
-De webservice is zo geconfigureerd dat hij zijn data opslaat in `/data/groceries.json`. Maar waar staat die data dan? Die staat in de container. Maar dat betekent dat de data weg is als je de container verwijdert. Er zijn meerdere manieren om met persistente data om te gaan in docker. Volumes en bind mounts. Volumes zijn virtuele schijven die je koppelt aan een container. De inhoud hiervan beheert Docker zelf ergens. Je kan ook een map in een docker container laten wijzen naar een map op de host. Alles dat de container dan in die map schrijft komt dan terecht in een aangewezen map op de host. Dat laatste gaan wij nu ook doen.
+De webservice is zo geconfigureerd dat hij zijn data opslaat in `/data/groceries.json`. Maar waar staat die data dan? Die staat in de container. Maar dat betekent dat de data weg is als je de container verwijdert. Er zijn meerdere manieren om met persistente data om te gaan in docker. Volumes en bind mounts. Volumes zijn virtuele schijven die je koppelt aan een container. De inhoud hiervan beheert Docker zelf ergens. Je kan ook een map in een docker container laten wijzen naar een map op de host. Alles dat de container in die map schrijft komt dan terecht in een aangewezen map op de host. Dat laatste gaan wij nu ook doen.
 
 23. Maak de map `c:\temp\data` aan.
 
