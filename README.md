@@ -198,12 +198,57 @@ Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan `do
 
 37. Pas de `docker-compose.yml` file aan zodat de data van de groceries.service weer in `c:\temp\data` wordt opgeslagen. Je mag zelf uitzoeken hoe. De documentatie is hier te vinden: https://docs.docker.com/compose/compose-file/
 
-Je hoeft niet altijd zelf alles te verzinnen. Visual Studio heeft ook Docker support.
+Momenteel is de yaml file zo geconfigureerd dat groceries.service niet bereikbaar is. Deze is alleen in het opgezette virtuele netwerk bereikbaar voor de website.
 
-38.  Maak een nieuwe project aan Visual Studio. File -> New -> Project .NET Core. Kies een ASP.NET Core Web Application. Druk op OK. Kies in het volgende dialoog voor Web Application en vink onderaan "Enable Docker Support" aan. Zorg ook dat het OS op Linux staat in het vakje eronder. Druk op OK.
+38.  Zorg er voor dat de webservice wel door jouw browser bereikbaar is.
 
-Bekijk de gegenereerde dockerfile en beredeneer wat hij doet en waarom. Als je nu op F5 drukt zal Visual Studio `docker build` en `docker run` aanroepen. Je kunt zelfs breakpoints zetten en debuggen in Visual Studio terwijl de software in een Docker container draait! Probeer maar.
+Je kan ook zelf commando's uitvoeren in een draaiende container met het commando `docker exec`. Probeer het maar met de groceries.service container.
 
-Docker images waar je trots op bent kun je beschikbaar maken aan de wereld net zoals je dit met nuget packages kunt doen. Een image kan je in een publieke (of private natuurlijk) repository zetten. Een van die repositories is docker hub, te vinden op hub.docker.com.
+39. Voer het volgende commando uit en kijk wat rond in het file system van de container. Weet je de groceries.json te vinden? Je kunt groceries.json op je eigen machine wijzigen en die wijziging bekijken in de draaiende container.
 
-39. Log in met je docker id of maak een account aan bij hub.docker.com en probeer een image te publishen en vervolgens er in je docker-compose file naar te refereren.
+```
+docker exec -it <container id> bash
+```
+
+Op het internet zijn duizenden images van softwarepakketten beschikbaar die je kunt downloaden en draaien op je eigen PC maar bijvoorbeeld ook op een Synology NAS. Dit werkt een stuk fijner dan packages downloaden installeren met de angst dat de package rotzooi achter laat als je de package probeert te verwijderen.
+
+40. Installeer sql server met het volgende commando.
+```
+docker run -d -p 1433:1433 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Password1." mcr.microsoft.com/mssql/server
+```
+
+Bij het starten van dit commando merkt Docker dat hij de image name `mcr.microsoft.com/mssql/server` die meegegeven werd niet beschikbaar is op het systeem. Hij probeert daarom de image te vinden op Docker hub. Dit is de "marktplaats" voor Docker images. Hier is onder andere de linux image van SQL server te vinden. Kijk maar eens op https://hub.docker.com/_/microsoft-mssql-server
+Je kunt dit image bijvoorbeeld gebruiken voor het draaien van geautomatiseerde testen. Start je eigen te testen software in een container, start de SQL server container, vul de database, draai de test, stop de containers, opgeruimd staat netjes. Dit alles doe je natuurlijk met docker-compose. Kijk maar naar het volgende voorbeeld:
+
+```
+version: "3"
+
+services:
+
+  product-api:
+    image: pocsoccontainerregistry.azurecr.io/producten.api:latest
+    ports:
+      - "8000:80"
+    environment:
+      - ConnectionStrings__ProductenContext=Server=mssql-deployment,1433;Database=ProductDB;MultipleActiveResultSets=true;User Id=SA;password=Sa!123!password
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - mssql-deployment
+ 
+  mssql-deployment:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - "1533:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Sa!123!password
+  
+  test:
+    depends_on:
+      - product-api
+    image: postman/newman:alpine
+    volumes:
+      - ./Postman:/etc/newman
+    command: run /etc/newman/Product_API.postman_collection.json -e "/etc/newman/Test.postman_environment.json" --reporters cli,junit --reporter-junit-export "/etc/newman/Output/output.xml"
+
+```
