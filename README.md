@@ -165,7 +165,7 @@ We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers te
 
 35. Voeg de volgende code toe aan het bestand:
 ```
-version: '3'
+version: '3.0'
 
 services:
   groceries.service:
@@ -255,7 +255,7 @@ services:
 
 Er worden drie containers gestart. Een met Sql server, een met de te testen service (producten.api) en een container met het programma Postman die testen uitvoert op de service. Na het starten van deze .yaml file staan de resultaten van de testen in de file output.xml.
 
-Zo, dus je bent snel door de tutorial gelopen. Wist je dat Kubernetes tegenwoordig ook in Docker voor Windows zit? Onderin de taakbalk zie je het Docker logo. In de settings van Docker kun je Kubernetes aan zetten. Doe dit maar.
+Wist je dat Kubernetes tegenwoordig ook in Docker voor Windows zit? Onderin de taakbalk zie je het Docker logo. In de settings van Docker kun je Kubernetes aan zetten. Doe dit maar.
 De docker-compose.yaml file kun je converteren naar een yaml file die Kubernetes begrijpt. Dit kun je doen met de volgende tool: https://github.com/kubernetes/kompose/releases/download/v1.17.0/kompose-windows-amd64.exe
 
 41. Verwijder alle containers in Docker.
@@ -267,7 +267,7 @@ kompose-windows-amd64 convert
 
 Er worden vier files gemaakt. Helaas zijn deze niet direct te gebruiken.
 
-43. Voeg in de twee files die eindigen op deployment.yaml de regel `imagePullPolicy: Never' toe onder de regel die begint met `image:`
+43. Voeg in de twee files die eindigen op deployment.yaml de regel `imagePullPolicy: Never` toe onder de regel die begint met `image:`
 
 44. Voeg boven de regel met het woord 'status' in het bestand `groceries-web-service.yaml` de regel 'type: LoadBalancer' toe
 
@@ -285,4 +285,6 @@ Als het goed is gegaan kan je nu de website http://localhost:85 openen. Deze web
 
 47. Stop de groceries.web container en kijk daarna naar de status van de container. Hij draait weer! Kubernetes detecteerde dat de container niet meer draaide, heeft de oude verwijderd en heeft een nieuwe gestart.
 
-48. Wijzig nu de file 'groceries-service-deployment.yaml' zodanig dat er meerdere instanties van de service gaan draaien. Voor hulp, kijk in https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ en https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+48. Wijzig nu de file 'groceries-service-deployment.yaml' zodanig dat er meerdere instanties, bijvoorbeeld 10, van de service gaan draaien. Voor hulp, kijk in https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ en https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+
+49. Bekijk nu het aantal containers dat er draait in Docker. Het leuke is dat als de website een verzoek doet bij de webservice, deze aanroepen netjes worden verdeeld over de beschikbare services, automatische load-balancing.
