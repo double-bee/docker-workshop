@@ -165,7 +165,7 @@ We gaan nu met docker-compose aan de slag. Hiermee kun je meerdere containers te
 
 35. Voeg de volgende code toe aan het bestand:
 ```
-version: '3.4'
+version: '3'
 
 services:
   groceries.service:
