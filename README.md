@@ -198,7 +198,7 @@ Eerder tijdens de workshop hebben we ervoor gezorgd door de -v parameter aan `do
 
 37. Pas de `docker-compose.yml` file aan zodat de data van de groceries.service weer in `c:\temp\data` wordt opgeslagen. Je mag zelf uitzoeken hoe. De documentatie is hier te vinden: https://docs.docker.com/compose/compose-file/
 
-Momenteel is de yaml file zo geconfigureerd dat groceries.service niet bereikbaar is. Deze is alleen in het opgezette virtuele netwerk bereikbaar voor de website.
+Momenteel is de yaml file zo geconfigureerd dat groceries.service alleen bereikbaar is in het opgezette virtuele netwerk. Hierdoor kan de website wel bij de service maar wij niet meer.
 
 38.  Zorg er voor dat de webservice wel door jouw browser bereikbaar is.
 
@@ -210,15 +210,15 @@ Je kan ook zelf commando's uitvoeren in een draaiende container met het commando
 docker exec -it <container id> bash
 ```
 
-Op het internet zijn duizenden images van softwarepakketten beschikbaar die je kunt downloaden en draaien op je eigen PC maar bijvoorbeeld ook op een Synology NAS. Dit werkt een stuk fijner dan packages downloaden installeren met de angst dat de package rotzooi achter laat als je de package probeert te verwijderen.
+Op het internet zijn duizenden images van softwarepakketten beschikbaar die je kunt downloaden en draaien op je eigen PC maar bijvoorbeeld ook op een Synology NAS. Dit werkt een stuk fijner dan packages downloaden en installeren met de angst dat de package rotzooi achter laat als je de package probeert te verwijderen.
 
-40. Installeer sql server met het volgende commando.
+40. Start Microsoft SQL Server met het volgende commando.
 ```
 docker run -d -p 1433:1433 -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Password1." mcr.microsoft.com/mssql/server
 ```
 
-Bij het starten van dit commando merkt Docker dat hij de image name `mcr.microsoft.com/mssql/server` die meegegeven werd niet beschikbaar is op het systeem. Hij probeert daarom de image te vinden op Docker hub. Dit is de "marktplaats" voor Docker images. Hier is onder andere de linux image van SQL server te vinden. Kijk maar eens op https://hub.docker.com/_/microsoft-mssql-server
-Je kunt dit image bijvoorbeeld gebruiken voor het draaien van geautomatiseerde testen. Start je eigen te testen software in een container, start de SQL server container, vul de database, draai de test, stop de containers, opgeruimd staat netjes. Dit alles doe je natuurlijk met docker-compose. Kijk maar naar het volgende voorbeeld:
+Zo, nu kun je zeggen dat je vandaag in drie minuten SQL Server hebt geinstalleerd. Bij het starten van dit commando merkt Docker dat de image met de naam `mcr.microsoft.com/mssql/server` die meegegeven werd niet beschikbaar is op het systeem. Hij probeert daarom de image te vinden op Docker hub. Dit is de "marktplaats" voor Docker images. Hier is onder andere de linux image van SQL server te vinden. Kijk maar eens op https://hub.docker.com/_/microsoft-mssql-server.
+Je kunt dit image bijvoorbeeld gebruiken voor het draaien van geautomatiseerde testen. Dat gaat als volgt: start je eigen te testen software in een container, start de SQL server container, vul de database, draai de test, stop de containers, opgeruimd staat netjes. Dit alles doe je natuurlijk met docker-compose. Kijk maar naar het volgende voorbeeld:
 
 ```
 version: "3"
@@ -252,3 +252,37 @@ services:
     command: run /etc/newman/Product_API.postman_collection.json -e "/etc/newman/Test.postman_environment.json" --reporters cli,junit --reporter-junit-export "/etc/newman/Output/output.xml"
 
 ```
+
+Er worden drie containers gestart. Een met Sql server, een met de te testen service (producten.api) en een container met het programma Postman die testen uitvoert op de service. Na het starten van deze .yaml file staan de resultaten van de testen in de file output.xml.
+
+Zo, dus je bent snel door de tutorial gelopen. Wist je dat Kubernetes tegenwoordig ook in Docker voor Windows zit? Onderin de taakbalk zie je het Docker logo. In de settings van Docker kun je Kubernetes aan zetten. Doe dit maar.
+De docker-compose.yaml file kun je converteren naar een yaml file die Kubernetes begrijpt. Dit kun je doen met de volgende tool: https://github.com/kubernetes/kompose/releases/download/v1.17.0/kompose-windows-amd64.exe
+
+41. Verwijder alle containers in Docker.
+
+42. Converteer de `docker-compose.yaml` file die je in stap 37 hebt gemaakt naar een file die Kubernetes begrijpt. Voer het volgende commando uit in de map waar `docker-compose.yaml` staat.
+```
+kompose-windows-amd64 convert
+```
+
+Er worden vier files gemaakt. Helaas zijn deze niet direct te gebruiken.
+
+43. Voeg in de twee files die eindigen op deployment.yaml de regel `imagePullPolicy: Never' toe onder de regel die begint met `image:`
+
+44. Voeg boven de regel met het woord 'status' in het bestand `groceries-web-service.yaml` de regel 'type: LoadBalancer' toe
+
+45. Wijzig in het bestand `groceries-web-deployment.yaml` de tekst `value: http://groceries.service/api/Groceries` naar `value: http://groceries-service/api/Groceries`
+
+46. Voer de volgende commando's uit
+```
+kubectl apply -f groceries-service-deployment.yaml
+kubectl apply -f groceries-service-service.yaml
+kubectl apply -f groceries-web-deployment.yaml
+kubectl apply -f groceries-web-service.yaml
+```
+
+Als het goed is gegaan kan je nu de website http://localhost:85 openen. Deze website en de service die aangeroepen wordt door de website draaien nu in Kubernetes.
+
+47. Stop de groceries.web container en kijk daarna naar de status van de container. Hij draait weer! Kubernetes detecteerde dat de container niet meer draaide, heeft de oude verwijderd en heeft een nieuwe gestart.
+
+48. Wijzig nu de file 'groceries-service-deployment.yaml' zodanig dat er meerdere instanties van de service gaan draaien. Voor hulp, kijk in https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ en https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
