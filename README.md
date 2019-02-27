@@ -20,13 +20,16 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
 7. Start beide projecten door in Visual Studio op `F5` te drukken.
    Als het goed is opent je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website. Later in de workshop gaat deze website een lijst met producten ophalen bij de service.
 8. Sluit de browser tabbladen.
+
+Het publishen van een project houdt in dat je de sourceode omzet naar binaries en alle bestanden die nodig zijn voor het draaien van het project in een map worden gezet.
+
 9. Publish de webservice door:
    - Klik met de rechter muisknop in de Solution Explorere op het project `Groceries.Service`. 
    - Kies `Publish...`
    - Kies in de linker lijst voor `Folder`
    - Type in `Choose a folder` de tekst `publish`
    - Klik op de knop `Publish`
-Het gebouwde project staat nu in de map `Publish` (`C:\code\docker-workshop\Groceries.Service\Publish`). Kijk er maar even in. Hier staat alles dat nodig om de webservice te draaien, behalve .NET Core zelf.
+Het gebouwde project staat nu in de map `Publish` (`C:\code\docker-workshop\Groceries.Service\Publish`). Kijk er maar even in. Hier staat alles dat nodig om de webservice te draaien, behalve .NET Core. Dit project is afhankelijk van andere software, namelijk .NET Core. Normaal gesproken zou je dit op de server installeren waar deze service moet gaan draaien.
 
 We gaan nu een Docker image maken waarin alle benodigde bestanden van de webservice worden gezet. Dit doen we door een dockerfile te maken. Dit is het script dat beschrijft wat er in de image komt te staan. 
 
@@ -62,7 +65,7 @@ Deze image staat niet in de project-directory, maar ergens centraal op het syste
 docker images
 ```
 
-Je ziet twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt. Onthoud de grootte van groceries.service.
+Je ziet minstens twee images staan. Een image van Microsoft die we als basis hebben gebruikt en de image die we net zelf hebben gemaakt. Onthoud de grootte van groceries.service.
 
 14. Start nu een container van de net gemaakte image:
 ```
