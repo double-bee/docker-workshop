@@ -18,7 +18,7 @@ In het begin zal elke stap beschreven en uitgelegd worden. Aan het einde wordt d
    - Zet de action van beide projecten op `Start`. 
    - Sluit het dialoog door op `Ok` te klikken. 
 7. Start beide projecten door in Visual Studio op `F5` te drukken.
-   Als het goed is opent je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website die zijn producten heeft opgehaald bij de webservice.
+   Als het goed is opent je een browser met 2 tabbladen. Op het ene tabblad zie je de url `http://localhost:55803/api/Groceries`, hierin zie je het resultaat van een aanroep naar de webservice. In het tweede tabblad zie je de url `http://localhost:53142`, hierin zie je de (erg simpele) website. Later in de workshop gaat deze website een lijst met producten ophalen bij de service.
 8. Sluit de browser tabbladen.
 9. Publish de webservice door:
    - Klik met de rechter muisknop in de Solution Explorere op het project `Groceries.Service`. 
