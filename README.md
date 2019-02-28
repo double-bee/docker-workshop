@@ -263,20 +263,44 @@ De docker-compose.yaml file kun je converteren naar een yaml file die Kubernetes
 
 41. Verwijder alle containers in Docker.
 
-42. Converteer de `docker-compose.yaml` file die je in stap 37 hebt gemaakt naar een file die Kubernetes begrijpt. Voer het volgende commando uit in de map waar `docker-compose.yaml` staat.
+42. Wijzig de docker-compose.yaml naar:
+```
+version: '3.4'
+
+services:
+  groceries.service:
+    image: groceries.service
+    build:
+      context: Groceries.Service
+      dockerfile: Dockerfile
+
+  groceries.web:
+    image: groceries.web
+    build:
+      context: Groceries.Web
+      dockerfile: Dockerfile
+    ports:
+      - "85:80"
+    environment:
+      - GroceryServiceUri=http://groceries.service/api/Groceries
+    depends_on:
+      - groceries.service
+```
+
+43. Converteer de `docker-compose.yaml` file die je in stap 37 hebt gemaakt naar een file die Kubernetes begrijpt.
 ```
 kompose-windows-amd64 convert
 ```
 
 Er worden vier files gemaakt. Helaas zijn deze niet direct te gebruiken.
 
-43. Voeg in de twee files die eindigen op deployment.yaml de regel `imagePullPolicy: Never` toe onder de regel die begint met `image:`
+44. Voeg in de twee files die eindigen op deployment.yaml de regel `imagePullPolicy: Never` toe onder de regel die begint met `image:`
 
-44. Voeg boven de regel met het woord 'status' in het bestand `groceries-web-service.yaml` de regel 'type: LoadBalancer' toe
+45. Voeg boven de regel met het woord 'status' in het bestand `groceries-web-service.yaml` de regel 'type: LoadBalancer' toe
 
-45. Wijzig in het bestand `groceries-web-deployment.yaml` de tekst `value: http://groceries.service/api/Groceries` naar `value: http://groceries-service/api/Groceries`
+46. Wijzig in het bestand `groceries-web-deployment.yaml` de tekst `value: http://groceries.service/api/Groceries` naar `value: http://groceries-service/api/Groceries`
 
-46. Voer de volgende commando's uit
+47. Voer de volgende commando's uit
 ```
 kubectl apply -f groceries-service-deployment.yaml
 kubectl apply -f groceries-service-service.yaml
@@ -286,8 +310,8 @@ kubectl apply -f groceries-web-service.yaml
 
 Als het goed is gegaan kan je nu de website http://localhost:85 openen. Deze website en de service die aangeroepen wordt door de website draaien nu in Kubernetes.
 
-47. Stop de groceries.web container en kijk daarna naar de status van de container. Hij draait weer! Kubernetes detecteerde dat de container niet meer draaide, heeft de oude verwijderd en heeft een nieuwe gestart.
+48. Stop de groceries.web container en kijk daarna naar de status van de container. Hij draait weer! Kubernetes detecteerde dat de container niet meer draaide, heeft de oude verwijderd en heeft een nieuwe gestart.
 
-48. Wijzig nu de file 'groceries-service-deployment.yaml' zodanig dat er meerdere instanties, bijvoorbeeld 10, van de service gaan draaien. Voor hulp, kijk in https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ en https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+49. Wijzig nu de file 'groceries-service-deployment.yaml' zodanig dat er meerdere instanties, bijvoorbeeld 10, van de service gaan draaien. Voor hulp, kijk in https://kubernetes.io/docs/concepts/workloads/controllers/deployment/ en https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 
-49. Bekijk nu het aantal containers dat er draait in Docker. Het leuke is dat als de website een verzoek doet bij de webservice, deze aanroepen netjes worden verdeeld over de beschikbare services, automatische load-balancing.
+50. Bekijk nu het aantal containers dat er draait in Docker. Het leuke is dat als de website een verzoek doet bij de webservice, deze aanroepen netjes worden verdeeld over de beschikbare services, automatische load-balancing.
