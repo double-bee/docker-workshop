@@ -289,7 +289,7 @@ services:
       - groceries.service
 ```
 
-43. Converteer de `docker-compose.yaml` file die je in stap 37 hebt gemaakt naar een file die Kubernetes begrijpt.
+43. Converteer de `docker-compose.yaml` file naar een file die Kubernetes begrijpt.
 ```
 kompose-windows-amd64 convert
 ```
