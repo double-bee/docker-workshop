@@ -265,7 +265,7 @@ De docker-compose.yaml file kun je converteren naar een yaml file die Kubernetes
 
 42. Wijzig de docker-compose.yaml naar:
 ```
-version: '3.4'
+version: '3.0'
 
 services:
   groceries.service:
