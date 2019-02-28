@@ -273,6 +273,8 @@ services:
     build:
       context: Groceries.Service
       dockerfile: Dockerfile
+    ports:
+      - "80:80"
 
   groceries.web:
     image: groceries.web
